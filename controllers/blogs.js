@@ -21,21 +21,29 @@ router.post('/', tokenExtractor, async (req, res) => {
 });
 
 router.put('/:id', blogFinder, async (req, res) => {
-  if (req.blog) {
-    req.blog.likes = req.body.likes;
-    await req.blog.save();
-    res.json(req.blog);
-  } else {
+  if (!req.blog) {
     let err = new Error();
     err.name = 'NotFoundError';
     throw err;
   }
+  req.blog.likes = req.body.likes;
+  await req.blog.save();
+  res.json(req.blog);
 });
 
-router.delete('/:id', blogFinder, async (req, res) => {
-  if (req.blog) {
-    await req.blog.destroy();
+router.delete('/:id', blogFinder, tokenExtractor, async (req, res) => {
+  const user = await User.findByPk(req.decodedToken.id);
+  if (!req.blog) {
+    let err = new Error();
+    err.name = 'NotFoundError';
+    throw err;
   }
+  if (req.blog.userId !== user.id) {
+    let err = new Error();
+    err.name = 'NotAuthorizedError';
+    throw err;
+  }
+  await req.blog.destroy();
   res.status(204).end();
 });
 

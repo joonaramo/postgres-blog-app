@@ -12,6 +12,10 @@ function errorHandler(error, req, res, next) {
   if (error.name === 'InvalidCredentialsError') {
     return res.status(401).json({ message: 'Invalid username or password' });
   }
+  if (error.name === 'NotAuthorizedError') {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
   next(error);
 }
 
