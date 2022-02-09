@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const expressRouter = require('express').Router();
+const router = require('@root/async-router').wrap(expressRouter);
 
 const { Blog } = require('../models');
 
@@ -23,7 +24,9 @@ router.put('/:id', blogFinder, async (req, res) => {
     await req.blog.save();
     res.json(req.blog);
   } else {
-    res.status(404).end();
+    let err = new Error();
+    err.name = 'NotFoundError';
+    throw err;
   }
 });
 
