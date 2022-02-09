@@ -9,6 +9,9 @@ function errorHandler(error, req, res, next) {
   if (error.name === 'NotFoundError') {
     return res.status(404).end();
   }
+  if (error.name === 'InvalidCredentialsError') {
+    return res.status(401).json({ message: 'Invalid username or password' });
+  }
   next(error);
 }
 
