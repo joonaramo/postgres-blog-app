@@ -1,0 +1,25 @@
+{
+  "name": "postgres-blog-app",
+  "version": "1.0.0",
+  "description": "Part 13 exercises of Helsinki University Full Stack Open course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joonaramo/postgres-blog-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joonaramo/postgres-blog-app/issues"
+  },
+  "homepage": "https://github.com/joonaramo/postgres-blog-app#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "pg": "^8.7.3",
+    "sequelize": "^6.16.1"
+  }
+}
