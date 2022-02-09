@@ -34,6 +34,7 @@ router.get('/', async (req, res) => {
       model: User,
     },
     where,
+    order: [['likes', 'DESC']],
   });
   res.json(blogs);
 });
