@@ -4,7 +4,26 @@ const router = require('@root/async-router').wrap(expressRouter);
 const { User, Blog, Reading } = require('../models');
 
 async function userFinder(req, res, next) {
-  req.user = await User.findByPk(req.params.id, {
+  next();
+}
+
+router.get('/', async (req, res) => {
+  const users = await User.findAll({
+    include: {
+      model: Blog,
+      attributes: { exclude: 'userId' },
+    },
+  });
+  res.json(users);
+});
+
+router.get('/:id', async (req, res) => {
+  let where = {};
+  where.userId = req.params.id;
+  if (req.query.read) {
+    where.read = req.query.read === 'true';
+  }
+  const user = await User.findByPk(req.params.id, {
     include: [
       {
         model: Blog,
@@ -21,30 +40,17 @@ async function userFinder(req, res, next) {
           attributes: {
             exclude: ['userId', 'blogId'],
           },
+          where,
         },
       },
     ],
   });
-  next();
-}
-
-router.get('/', async (req, res) => {
-  const users = await User.findAll({
-    include: {
-      model: Blog,
-      attributes: { exclude: 'userId' },
-    },
-  });
-  res.json(users);
-});
-
-router.get('/:id', userFinder, async (req, res) => {
-  if (!req.user) {
+  if (!user) {
     let err = new Error();
     err.name = 'NotFoundError';
     throw err;
   }
-  res.json(req.user);
+  res.json(user);
 });
 
 router.post('/', async (req, res) => {
