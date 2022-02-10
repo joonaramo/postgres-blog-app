@@ -20,14 +20,19 @@ router.post('/', async (req, res) => {
     throw err;
   }
 
-  const payload = {
+  // const payload = {
+  //   username: user.username,
+  //   id: user.id,
+  // };
+
+  // const token = jwt.sign(payload, JWT_SECRET);
+
+  req.session.user = {
     username: user.username,
     id: user.id,
   };
 
-  const token = jwt.sign(payload, JWT_SECRET);
-
-  res.json({ token, username: user.username, name: user.name });
+  res.json({ username: user.username, name: user.name });
 });
 
 module.exports = router;

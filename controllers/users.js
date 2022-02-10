@@ -8,6 +8,7 @@ async function userFinder(req, res, next) {
 }
 
 router.get('/', async (req, res) => {
+  console.log('session', req.session.id);
   const users = await User.findAll({
     include: {
       model: Blog,

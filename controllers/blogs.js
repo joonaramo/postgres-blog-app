@@ -3,6 +3,7 @@ const router = require('@root/async-router').wrap(expressRouter);
 const { Op } = require('sequelize');
 
 const { Blog, User } = require('../models');
+const checkSession = require('../util/checkSession');
 const { tokenExtractor } = require('../util/tokenExtractor');
 
 async function blogFinder(req, res, next) {
@@ -39,9 +40,8 @@ router.get('/', async (req, res) => {
   res.json(blogs);
 });
 
-router.post('/', tokenExtractor, async (req, res) => {
-  const user = await User.findByPk(req.decodedToken.id);
-  const blog = await Blog.create({ ...req.body, userId: user.id });
+router.post('/', checkSession, async (req, res) => {
+  const blog = await Blog.create({ ...req.body, userId: req.user.id });
   res.json(blog);
 });
 
